@@ -9,10 +9,10 @@
 			</el-form-item>
 			
 			<el-form-item label="代码类别" prop="generateList">
-				  <el-checkbox-group v-model="form.generateList">
-					<el-checkbox label="web">前端代码</el-checkbox>
-					<el-checkbox label="java">后端代码</el-checkbox>
-				</el-checkbox-group>
+				<el-checkbox-group v-model="form.generateList">
+				<el-checkbox label="web">前端代码</el-checkbox>
+				<el-checkbox label="java">后端代码</el-checkbox>
+			</el-checkbox-group>
 				
 			</el-form-item>
 		</el-form>
@@ -34,14 +34,13 @@ export default {
 		};
 	},
 	computed: {
-        moduleName(){
-            return this.$store.state.schema.schemaData.moduleName;
+		moduleName(){
+			return this.$store.state.schema.schemaData.moduleName;
 		},
 		packagePath(){
 			return this.$store.state.schema.schemaData.packagePath;
 		},
-
-    },
+  },
 	watch: {
 		moduleName: function(val){
 			this.form.moduleName = val;
@@ -58,13 +57,11 @@ export default {
 					message: '请选择生成代码类型'
 				});   
 			} else {
-				http.post('generateCode',
-					{
-						'schemaId': this.$store.state.schema.schemaData.id,
-						'generateList': this.form.generateList,
-						
-					}).then(result=>{
-					if(ret.httpCode === 200){
+				http.post('generateCode',{
+					'schemaId': this.$store.state.schema.schemaData.id,
+					'generateList': this.form.generateList,
+				}).then(result=>{
+					if(result.httpCode === 200){
 						this.$message({
 							type: 'success',
 							message: '生成成功！'

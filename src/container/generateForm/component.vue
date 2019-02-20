@@ -37,15 +37,15 @@
 					<el-form-item label="组件类型" prop="componentType">
 						<el-select v-model="form.componentType" placeholder="请选择组件类型">
 							<el-option label="输入框" value="input"></el-option>
-							<el-option label="单选框" value="radio"></el-option>
-							<el-option label="多选框" value="checkbox"></el-option>
-							<el-option label="下拉框" value="select"></el-option>
+							<!-- <el-option label="单选框" value="radio"></el-option> -->
+							<!-- <el-option label="多选框" value="checkbox"></el-option> -->
+							<!-- <el-option label="下拉框" value="select"></el-option> -->
 							<el-option label="开关按钮" value="switch"></el-option>
 							<el-option label="日期选择器" value="datePicker"></el-option>
 							<el-option label="时间选择器" value="dateTimePicker"></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="字典引用" prop="keynameId" v-show="form.componentType === 'radio' || form.componentType === 'checkbox' || form.componentType === 'select'">
+					<!-- <el-form-item label="字典引用" prop="keynameId" v-show="form.componentType === 'radio' || form.componentType === 'checkbox' || form.componentType === 'select'">
 						<el-select v-model="form.keynameId" placeholder="请选择组件类型">
 							<el-option
 								v-for="item in keynameOptions"
@@ -54,7 +54,7 @@
 								:value="item.id">
 							</el-option>
 						</el-select>
-					</el-form-item>
+					</el-form-item> -->
 				</el-form>
 			</el-col>
 		</el-row>
@@ -79,7 +79,7 @@ export default {
 	    	isRequired: '',
 	    	isQuery: '',
 	    	componentType: '',
-	    	keynameId: '',
+	    	// keynameId: '',
 	    },
 	    rules: {
 			label: [
@@ -95,13 +95,13 @@ export default {
 	},
 
 	computed: {
-		schemaId(){
-			return this.$store.state.schema.schemaData.id;
+		tableNames(){
+			return this.$store.state.entity.tableNames;
 		}
 	},
 	watch: {
-		schemaId: function(val){
-			this.getEntityTree(val);
+		tableNames(newval,oldval){
+			this.getEntityTree();
 			this.getKeyOptions();
 		},
 	},
@@ -147,7 +147,7 @@ export default {
 		},
 		// 获取实体树
 		getEntityTree(schemaId){
-			http.get('entityTree', {schemaId: schemaId}).then((result)=>{
+			http.get('entityTree', {schemaId: this.$store.state.schema.schemaData.id}).then((result)=>{
 				if (result.httpCode === 200) {
 					this.entityTreeData = result.data;
 				} else {

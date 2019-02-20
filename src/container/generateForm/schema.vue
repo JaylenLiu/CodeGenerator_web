@@ -82,8 +82,8 @@ export default {
 		this.getSchemaTree();
 	},
 	methods: {
-		   // 删除节点
-        remove(node, data) {
+		// 删除节点
+    remove(node, data) {
 			if(data.id != -1){
 				this.$confirm('您确定要删除数据吗?', '提示', {
 				confirmButtonText: '确定',
@@ -99,7 +99,7 @@ export default {
 								message: '删除成功！'
 							});   
 							this.getSchemaTree();
-							this.resetState();
+							// this.resetState();
 						} else {
 							this.$message({
 								type: 'error',
@@ -107,7 +107,6 @@ export default {
 							});   
 						}
 					});
-					
 				})
 			} 
 		},
@@ -122,14 +121,15 @@ export default {
 			this.$refs[formName].validate((valid) => {
 				if (valid) {
 					http.post('agileSchema', this.form).then((ret)=>{
-						if(ret.status === 200){
+						if(ret.httpCode === 200){
 							this.$message({
 								type: 'success',
 								message: '新增成功！'
 							});
 							this.$refs[formName].clearValidate();
-							this.$emit('step');
 							this.$store.dispatch('saveSchema', ret.data);
+							this.$emit('step');
+						
 						} else {
 							this.$message({
 								type: 'error',

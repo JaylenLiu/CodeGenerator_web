@@ -100,7 +100,7 @@ export default {
 		submitForm(formName) {
 			this.$refs[formName].validate((valid) => {
 				Object.assign(this.form,{
-                    schemaId: this.$store.state.schema.schemaData.id
+          schemaId: this.$store.state.schema.schemaData.id
 				});
 				http.post('agileEntites', this.form).then((ret)=>{
 					if(ret.httpCode === 200){
@@ -108,6 +108,7 @@ export default {
 							type: 'success',
 							message: '保存成功！'
 						});
+						this.$store.dispatch('saveTableNames', this.form.tableNames);
 						this.$refs[formName].clearValidate();
 						this.$emit('step');
 					} else {

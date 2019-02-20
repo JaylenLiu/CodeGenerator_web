@@ -4,7 +4,6 @@
 		<el-steps :active="step" align-center>
 			<el-step title="方案"></el-step>
 			<el-step title="实体"></el-step>
-			<!-- <el-step title="表单"></el-step> -->
 			<el-step title="组件"></el-step>
 			<el-step title="代码生成"></el-step>
 		</el-steps>
@@ -12,7 +11,6 @@
 		<div class="container">
 			<Schema v-show="step === 0" class="step_son" ref="schema" @step="toNext"></Schema>
 			<Entity v-show="step === 1" class="step_son" ref="entity" @step="toNext"></Entity>
-			<!-- <Field v-show="step === 2" ref="field" @step="toNext"></Field> -->
 			<Components v-show="step === 2" ref="component" @step="toNext"></Components>
 			<GenerateCode v-show="step === 3" class="step_son" ref="generate"></GenerateCode>
 		</div>
@@ -57,23 +55,6 @@ export default {
 	methods: {
 		toNext() {
 			this.step += 1;
-			// switch(this.step) {
-			// 	case 0:
-			// 		this.$refs.schema.submitForm('schema');
-			// 		break;
-			// 	case 1:
-			// 		this.$refs.entity.submitForm('entity');
-			// 		break;
-			// 	case 2:
-			// 		this.$refs.field.submitForm('field');
-			// 		break;
-			// 	case 3:
-			// 		this.$refs.component.submitForm('component');
-			// 		break;
-			// 	case 4:
-			// 		this.$refs.generate.submitForm('generate');
-			// 		break;
-			// }
 		},
 		toLast() {
 			if (this.step !== 0) {
