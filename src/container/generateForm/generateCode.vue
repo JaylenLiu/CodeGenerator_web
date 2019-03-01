@@ -69,7 +69,7 @@ export default {
 					} else {
 						this.$message({
 							type: 'error',
-							message: ret.message
+							message: result.message
 						});   
 					}
 				});
