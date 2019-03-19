@@ -23,8 +23,8 @@
         data: function(){
             return {
                 ruleForm: {
-                    username: '',
-                    password: ''
+                    username: 'admin',
+                    password: '123456'
                 },
                 rules: {
                     username: [
@@ -56,7 +56,6 @@
                             password: this.ruleForm.password
                         };
                         http.post("login", params).then((res)=>{
-                            console.log('res:', res);
                             if(res.httpCode === 200){
                                 // this.$store.dispatch('login',res.data);  
                                 sessionStorage.setItem("username", this.ruleForm.username);

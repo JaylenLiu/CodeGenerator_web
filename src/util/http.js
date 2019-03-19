@@ -2,21 +2,20 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import qs from 'qs'
 import { baseURL } from '../../config/url.js'
+import store from '../store/index.js'
+
+axios.defaults.baseURL = baseURL;
+// axios.defaults.headers.common['token'] = store.state.login.token;
 
 // create an axios instance
 const service = axios.create({
   baseURL: baseURL, // api 的 base_url
-  timeout: 5000 // request timeout
+  timeout: 20 * 1000 // request timeout
 })
+
 
 // request拦截
 service.interceptors.request.use(config => {
-  // loading
-  // Do something before request is sent
-  // if (store.getters.token) {
-    // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
-    // config.headers['X-Token'] = getToken()
-  // }
   return config
 }, error => {
   return Promise.reject(error)
@@ -29,7 +28,7 @@ service.interceptors.response.use(response => {
   Message({
     message: error.message,
     type: 'error',
-    duration: 5 * 1000
+    duration: 20 * 1000
   })
   return Promise.resolve(error.response)
 })
@@ -54,20 +53,15 @@ function checkCode (res) {
   if (res.status === -404) {
     alert(res.msg)
   }
-  // if (res.data && (!res.data.success)) {
-  //   alert(res.data.error_msg)
-  // }
   return res;
 }
 
 export default {
   post (url, data) {
-    return axios({
+    return service({
       method: 'post',
-      baseURL: baseURL,
       url,
       data: qs.stringify(data, {arrayFormat: 'repeat'}),
-      timeout: 10000,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -83,14 +77,12 @@ export default {
     )
   },
   get (url, params) {
-    return axios({
+    return service({
       method: 'get',
-      baseURL: baseURL,
       url,
       params, // get 请求时带的参数
-      timeout: 10000,
       headers: {
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
       }
     }).then(
       (response) => {
@@ -103,14 +95,13 @@ export default {
     )
   },
   put (url, params) {
-    return axios({
+    return service({
       method: 'put',
-      baseURL: baseURL,
       url,
-      params, // put 请求时带的参数
-      timeout: 10000,
+      params: params, // put 请求时带的参数
       headers: {
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
       }
     }).then(
       (response) => {
@@ -123,12 +114,13 @@ export default {
     )
   },
   del (url, params) {
-    return axios({
+    return service({
       method: 'delete',
-      baseURL: baseURL,
       url,
-      params, // delete 请求时带的参数
-      timeout: 10000,
+      params :  params, // delete 请求时带的参数
+      paramsSerializer: params => {
+        return qs.stringify(params, { indices: false })
+      },
       headers: {
         'X-Requested-With': 'XMLHttpRequest'
       }
