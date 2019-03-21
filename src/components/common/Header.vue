@@ -129,8 +129,6 @@
             // 用户名下拉菜单选择事件
             handleCommand(command) {
                 if(command == 'loginout'){
-                    sessionStorage.removeItem("username");
-                    sessionStorage.removeItem("realname");
                     localStorage.removeItem("username");
                     localStorage.removeItem("password");
                     localStorage.removeItem("realname");

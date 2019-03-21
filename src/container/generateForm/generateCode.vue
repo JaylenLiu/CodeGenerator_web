@@ -57,22 +57,14 @@ export default {
 					message: '请选择生成代码类型'
 				});   
 			} else {
-				http.post('generateCode',{
-					'schemaId': this.$store.state.schema.schemaData.id,
-					'generateList': this.form.generateList,
-				}).then(result=>{
-					if(result.httpCode === 200){
-						this.$message({
-							type: 'success',
-							message: '生成成功！'
-						});   
-					} else {
-						this.$message({
-							type: 'error',
-							message: result.message
-						});   
-					}
-				});
+				http.download(
+					'generateCode',
+					{
+						'schemaId': this.$store.state.schema.schemaData.id,
+						'generateList': this.form.generateList,
+					},
+					'code.zip'
+				);
 			}
 		},
 		resetForm(formName) {

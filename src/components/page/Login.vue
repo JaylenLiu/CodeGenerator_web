@@ -58,9 +58,9 @@
                         http.post("login", params).then((res)=>{
                             if(res.httpCode === 200){
                                 // this.$store.dispatch('login',res.data);  
-                                sessionStorage.setItem("username", this.ruleForm.username);
-                                sessionStorage.setItem("realname", res.data.realname);
-                                sessionStorage.setItem("password", this.ruleForm.password);
+                                localStorage.setItem("username", this.ruleForm.username);
+                                localStorage.setItem("realname", res.data.realname);
+                                localStorage.setItem("password", this.ruleForm.password);
                                 if (this.$route.query.path) {
                                     this.$router.push(this.$route.query.path);
                                 } else {
