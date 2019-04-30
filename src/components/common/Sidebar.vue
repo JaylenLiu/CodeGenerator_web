@@ -83,12 +83,12 @@
                     {
                         icon: "el-icon-menu",
                         index: "2",
-                        title: "表单生成",
+                        title: "代码生成",
                         subs: [
                             {
                                 icon: "el-icon-menu",
                                 index: "generateForm",
-                                title: "智能表单"
+                                title: "代码生成器"
                             }
                         ]
                     },

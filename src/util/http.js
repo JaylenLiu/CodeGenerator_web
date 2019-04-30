@@ -6,7 +6,7 @@ import store from '../store/index.js'
 
 axios.defaults.baseURL = baseURL;
 // axios.defaults.headers.common['token'] = store.state.login.token;
-
+axios.defaults.withCredentials=true;
 // create an axios instance
 const service = axios.create({
   baseURL: baseURL, // api 的 base_url

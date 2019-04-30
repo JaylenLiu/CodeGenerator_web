@@ -7,13 +7,19 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/account'
+            redirect: '/dashboard'
         },
         {
             path: '/',
             component: resolve => require(['../components/common/Home.vue'], resolve),
             meta: { requireAuth:true },
             children:[
+                {
+                    // 首页
+                    path: '/dashboard',
+                    component: resolve => require(['../components/page/Dashboard.vue'], resolve),
+                    meta: { title: '首页'}
+                },
                 {
                     // 账户信息
                     path: '/account',
@@ -64,6 +70,11 @@ export default new Router({
                     path:'/databaseConn',
                     component: resolve => require(['../container/databaseCon/databaseCon.vue'], resolve),
                     meta: { title: '数据库连接管理'}
+                },
+                {
+                    path: '/tabs',
+                    component: resolve => require(['../components/page/Tabs.vue'], resolve),
+                    meta: { title: '消息通知'}
                 }
             ]
         },

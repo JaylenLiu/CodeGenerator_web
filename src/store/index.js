@@ -4,6 +4,7 @@ import schema from './modules/schema';
 import databaseCon from './modules/databaseCon';
 import key from './modules/key';
 import entity from './modules/entity';
+import notice from './modules/notice';
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -11,7 +12,8 @@ const store = new Vuex.Store({
 		schema,
 		databaseCon,
 		key,
-		entity
+		entity,
+		notice
 	},
 });
 

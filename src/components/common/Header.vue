@@ -13,6 +13,15 @@
                         <i class="el-icon-rank"></i>
                     </el-tooltip>
                 </div>
+                <!-- 消息中心 -->
+                <div class="btn-bell">
+                    <el-tooltip effect="dark" :content="msgNum?`有${msgNum}条未读消息`:`消息中心`" placement="bottom">
+                        <router-link to="/tabs">
+                            <i class="el-icon-bell"></i>
+                        </router-link>
+                    </el-tooltip>
+                    <span class="btn-bell-badge" v-if="msgNum > 0"></span>
+                </div>
                 <!-- 用户头像 -->
                 <div class="user-avator"><img src="static/img/img.jpg"></div>
                 <!-- 用户名下拉菜单 -->
@@ -75,7 +84,6 @@
                 collapse: false,
                 fullscreen: false,
                 // name: 'admin',
-                message: 2,
                 editData:{
                     password:'',
                     newPassword:'',
@@ -92,18 +100,31 @@
                     ],
                     newPassword_again: [
                         { required: true, validator: validatePassword_again , trigger: 'blur' }
-                    ],
-                
+                    ]
                 },
             }
+        },
+        created() {
+            http.get('sysNotice/state/1', {}).then((ret)=>{
+                if(ret.httpCode === 200){
+                    this.$store.dispatch('changeNum', ret.data.length);
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: ret.message
+                    });
+                }
+            });
         },
         computed:{
             username(){
                 return sessionStorage.getItem('realname');
-            }
+            },
+            msgNum(){
+                return this.$store.state.notice.msgNum;
+            },
         },
         methods:{
-
             // 修改密码提交事件
             submit(formName){
                 http.put('changePassword', {newPassword: this.editData.newPassword}).then((ret)=>{
@@ -129,9 +150,9 @@
             // 用户名下拉菜单选择事件
             handleCommand(command) {
                 if(command == 'loginout'){
-                    localStorage.removeItem("username");
-                    localStorage.removeItem("password");
-                    localStorage.removeItem("realname");
+                    sessionStorage.removeItem("username");
+                    sessionStorage.removeItem("password");
+                    sessionStorage.removeItem("realname");
                     this.$router.push('/login');
                 } else if (command == 'changePassword') {
                     this.editVisible = true;

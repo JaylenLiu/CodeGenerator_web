@@ -23,6 +23,7 @@
 </template>
 <script type="text/javascript">
 import http from '@util/http';
+import { Loading } from 'element-ui';
 export default {
 	data() {
 		return {
@@ -57,6 +58,7 @@ export default {
 					message: '请选择生成代码类型'
 				});   
 			} else {
+				let loadingInstance = Loading.service(this.loadingOptions);
 				http.download(
 					'generateCode',
 					{
@@ -64,7 +66,9 @@ export default {
 						'generateList': this.form.generateList,
 					},
 					'code.zip'
-				);
+				).then(()=>{
+					loadingInstance.close();
+				});
 			}
 		},
 		resetForm(formName) {
