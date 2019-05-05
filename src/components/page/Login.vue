@@ -37,7 +37,6 @@
             }
         },
         created() {
-            
             if (this.$route.query.message) {
                 this.$message({
                     showClose: true,

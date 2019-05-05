@@ -3,6 +3,7 @@ import { Message } from 'element-ui'
 import qs from 'qs'
 import { baseURL } from '../../config/url.js'
 import store from '../store/index.js'
+import router from '../router';
 
 axios.defaults.baseURL = baseURL;
 // axios.defaults.headers.common['token'] = store.state.login.token;
@@ -37,8 +38,17 @@ function checkStatus (response) {
   // loading
   // 如果http状态码正常，则直接返回数据
   if (response && (response.status === 200 || response.status === 304 || response.status === 400)) {
-    // 如果不需要除了data之外的数据，可以直接 return response.data
-    return response.data;
+    if (response.data.httpCode == 600) {
+      sessionStorage.removeItem("username");
+      sessionStorage.removeItem("realname");
+      sessionStorage.removeItem("password");
+      router.push({
+        path: '/login',
+        query: { message: response.data.message}
+      });
+    } else {
+      return response.data;
+    }
   } else {
     // 异常状态下，把错误信息返回去
     return {
@@ -46,14 +56,6 @@ function checkStatus (response) {
       msg: '网络异常'
     }
   }
-}
-
-function checkCode (res) {
-  // 如果code异常(这里已经包括网络错误，服务器错误，后端抛出的错误)，可以弹出一个错误提示，告诉用户
-  if (res.status === -404) {
-    alert(res.msg)
-  }
-  return res;
 }
 
 export default {
@@ -69,10 +71,6 @@ export default {
     }).then(
       (response) => {
         return checkStatus(response)
-      }
-    ).then(
-      (res) => {
-        return checkCode(res)
       }
     )
   },
@@ -117,10 +115,6 @@ export default {
       (response) => {
         return checkStatus(response)
       }
-    ).then(
-      (res) => {
-        return checkCode(res)
-      }
     )
   },
   put (url, params) {
@@ -135,10 +129,6 @@ export default {
     }).then(
       (response) => {
         return checkStatus(response)
-      }
-    ).then(
-      (res) => {
-        return checkCode(res)
       }
     )
   },
@@ -156,10 +146,6 @@ export default {
     }).then(
       (response) => {
         return checkStatus(response)
-      }
-    ).then(
-      (res) => {
-        return checkCode(res)
       }
     )
   }
