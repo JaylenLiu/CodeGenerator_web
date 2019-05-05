@@ -15,7 +15,7 @@
             <el-table :data="tableData" border style="width: 100%"  @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="40"></el-table-column>
                 <!-- <el-table-column type="index" label="序号"></el-table-column> -->
-                <el-table-column prop="resName" label="资源名称" width="100"></el-table-column>
+                <el-table-column prop="resName" label="资源名称" width="150"></el-table-column>
                 <el-table-column prop="resPath" label="资源路径" width="130"></el-table-column>
                 <!-- <el-table-column prop="resUrl" label="资源URL" width="250"></el-table-column> -->
                 <!-- <el-table-column prop="icon" label="图标" width="100"></el-table-column> -->
@@ -47,18 +47,25 @@
          <!-- 编辑弹出框 -->
         <el-dialog :visible.sync="editVisible" width="500px">
             <el-form ref="resourceForm"  :model="editData" label-width="100px" :rules="rules" status-icon>
-                <el-form-item label="资源名称" prop="resName">
-                    <el-input class="handle-input mr10" v-model="editData.resName"></el-input>
+                <el-form-item label="是否父目录">
+                    <el-switch
+                        v-model="isParentDir"
+                        active-text="是"
+                        inactive-text="否">
+                    </el-switch>
                 </el-form-item>
-                <el-form-item label="父级资源名称">
-                    <el-select placeholder="选择父级资源" v-model="editData.parentId" class="handle-input mr10">
+                <el-form-item v-if="!isParentDir" label="父目录" prop="parentId">
+                    <el-select v-model="editData.parentId" placeholder="请选择" class="handle-input mr10">
                         <el-option
-                            v-for="item in resData"
+                            v-for="item in parentDirOptions"
                             :key="item.id"
                             :label="item.resName"
                             :value="item.id">
                         </el-option>
-                   </el-select>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="资源名称" prop="resName">
+                    <el-input class="handle-input mr10" v-model="editData.resName"></el-input>
                 </el-form-item>
                 <el-form-item label="资源路径" prop="resPath">
                     <el-input class="handle-input mr10" v-model="editData.resPath"></el-input>
@@ -91,14 +98,15 @@
                 operationType: '', // 操作类型，edit:编辑，add:新增
                 editData:{  // 弹出框绑定的数据
                     id:'',
-                    parentId: -1,
+                    parentId: '',
                     resName:'',
                     resUrl:'',
                     resPath: '',
                     icon:'el-icon-menu',
                     sort:''
                 }, 
-                resData: [], // 资源数据
+                isParentDir: false,
+                parentDirOptions:[],
                 editVisible: false, // 是否展示编辑框
                 tableData: [], // 表格数据
                 searchKey: '', // 查询关键字
@@ -124,6 +132,17 @@
         },
         created() {
             this.initData({});
+            // 获取父目录信息
+            http.get('/sysResource/parentDir', {}).then((res)=>{
+                if (res.httpCode === 200) {
+                    this.parentDirOptions = res.data;
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: res.message
+                    });  
+                }
+            });
         },
         mounted () {
             // let w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -165,7 +184,7 @@
             add(){
                 this.editData = {
                     id:'',
-                    parentId: -1,
+                    parentId: '',
                     resName:'',
                     resUrl:'',
                     resPath:'',
@@ -174,20 +193,6 @@
                 };
                 this.operationType = "add";
                 this.editVisible = true;
-
-                 // 请求所有的资源数据
-                http.get('allRes', {}).then((res)=>{
-                    if (res.httpCode === 200) {
-                        this.resData= [{id:-1, resName:'请选择'}];
-                        this.resData.push.apply(this.resData, res.data);
-                    } else {
-                        this.$message({
-                            type: 'error',
-                            message: res.message
-                        });  
-                    }
-                   
-                });
             },
             // 分页事件 
             handlePageChange(currentPage){
@@ -218,7 +223,7 @@
             edit(row) {
                 this.editData = {
                     id: row.id,
-                    parentId: row.parentId ? row.parentId : -1,
+                    parentId: row.parentId ? row.parentId : '',
                     resName: row.resName,
                     resUrl: row.resUrl,
                     resPath: row.resPath,
@@ -227,20 +232,6 @@
                 };
                 this.operationType = "edit";
                 this.editVisible = true;
-
-                  // 请求所有的资源数据
-                http.get('allRes', {}).then((res)=>{
-                    if (res.httpCode === 200) {
-                        this.resData= [{id:-1, resName:'请选择'}];
-                        this.resData.push.apply(this.resData,res.data);
-                    } else {
-                        this.$message({
-                            type: 'error',
-                            message: res.message
-                        });  
-                    }
-                   
-                });
             },
             // 删除确认
             deleteConfirm(param) {

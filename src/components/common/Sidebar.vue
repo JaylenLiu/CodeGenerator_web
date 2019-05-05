@@ -31,72 +31,72 @@
 </template>
 
 <script>
-    import {get} from '@util/http';
+    import http from '@util/http';
     import bus from '../common/bus';
     export default {
         data() {
             return {
                 collapse: false,
                 items: [
-                    {
-                        icon: "el-icon-menu",
-                        index: "1",
-                        title: "基础管理",
-                        subs: [
-                            {
-                                icon: "el-icon-menu",
-                                index: "roleAssignment",
-                                title: "角色分配"
-                            },
-                            {
-                                icon: "el-icon-menu",
-                                index: "resAssignment",
-                                title: "资源分配"
-                            },
-                            {
-                                icon: "el-icon-menu",
-                                index: "account",
-                                title: "账户管理"
-                            },
-                            {
-                                icon: "el-icon-menu",
-                                index: "role",
-                                title: "角色管理"
-                            },
-                            {
-                                icon: "el-icon-menu",
-                                index: "organization",
-                                title: "组织管理"
-                            },
-                            {
-                                icon: "el-icon-menu",
-                                index: "resource",
-                                title: "资源管理"
-                            },
-                            {
-                                icon: "el-icon-menu",
-                                index: "key",
-                                title: "字典管理"
-                            }
-                        ]
-                    },
-                    {
-                        icon: "el-icon-menu",
-                        index: "2",
-                        title: "代码生成",
-                        subs: [
-                            {
-                                icon: "el-icon-menu",
-                                index: "generateForm",
-                                title: "代码生成器"
-                            }
-                        ]
-                    },
-                    {
-                        icon: "el-icon-menu",
-                        index: "databaseConn",
-                        title: "数据库管理"
-                    }
+                    // {
+                    //     icon: "el-icon-menu",
+                    //     index: "1",
+                    //     title: "基础管理",
+                    //     subs: [
+                    //         {
+                    //             icon: "el-icon-menu",
+                    //             index: "roleAssignment",
+                    //             title: "角色分配"
+                    //         },
+                    //         {
+                    //             icon: "el-icon-menu",
+                    //             index: "resAssignment",
+                    //             title: "资源分配"
+                    //         },
+                    //         {
+                    //             icon: "el-icon-menu",
+                    //             index: "account",
+                    //             title: "账户管理"
+                    //         },
+                    //         {
+                    //             icon: "el-icon-menu",
+                    //             index: "role",
+                    //             title: "角色管理"
+                    //         },
+                    //         {
+                    //             icon: "el-icon-menu",
+                    //             index: "organization",
+                    //             title: "组织管理"
+                    //         },
+                    //         {
+                    //             icon: "el-icon-menu",
+                    //             index: "resource",
+                    //             title: "资源管理"
+                    //         },
+                    //         {
+                    //             icon: "el-icon-menu",
+                    //             index: "key",
+                    //             title: "字典管理"
+                    //         }
+                    //     ]
+                    // },
+                    // {
+                    //     icon: "el-icon-menu",
+                    //     index: "2",
+                    //     title: "代码生成",
+                    //     subs: [
+                    //         {
+                    //             icon: "el-icon-menu",
+                    //             index: "generateForm",
+                    //             title: "代码生成器"
+                    //         }
+                    //     ]
+                    // },
+                    // {
+                    //     icon: "el-icon-menu",
+                    //     index: "databaseConn",
+                    //     title: "数据库管理"
+                    // }
                 ]
             }
         },
@@ -110,23 +110,23 @@
             bus.$on('collapse', msg => {
                 this.collapse = msg;
             });
-            // this.initData();
+            this.initData();
         },
         methods: {
-             // 初始化数据
-            // initData() {
-            //     // 请求资源树
-            //     get('resTree', {}).then((res)=>{
-            //         if (res.ret === 200) {
-            //            this.items = res.data;
-            //         } else {
-            //             this.$message({
-            //                 type: 'error',
-            //                 message: ret.message
-            //             });  
-            //         }
-            //     });
-            // }
+            // 初始化数据
+            initData() {
+                // 请求资源树
+                http.get('resTree', {}).then((res)=>{
+                    if (res.httpCode === 200) {
+                       this.items = res.data;
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: ret.message
+                        });  
+                    }
+                });
+            }
         }
     }
 </script>
