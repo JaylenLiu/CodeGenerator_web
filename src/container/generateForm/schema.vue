@@ -29,12 +29,12 @@
 				<el-form-item label="方案名称" prop="schemaName">
 					<el-input v-model="form.schemaName"></el-input>
 				</el-form-item>
-				<el-form-item label="模块名称" prop="moduleName">
+				<!-- <el-form-item label="模块名称" prop="moduleName">
 					<el-input v-model="form.moduleName"></el-input>
 				</el-form-item>
 				<el-form-item label="模块描述" prop="moduleDesc">
 					<el-input type="textarea" v-model="form.moduleDesc"></el-input>
-				</el-form-item>
+				</el-form-item> -->
 				<el-form-item label="代码包路径" prop="packagePath">
 					<el-input v-model="form.packagePath"></el-input>
 				</el-form-item>
@@ -42,7 +42,8 @@
 		  </el-col>
 		</el-row>
 		<el-row type="flex" justify="center">
-			<el-button type="primary"  @click="submitForm('schemaForm')">保存</el-button>
+			<el-button v-if="schemaId" type="primary"  @click="updateForm('schemaForm')">更新</el-button>
+			<el-button v-else type="primary"  @click="submitForm('schemaForm')">保存</el-button>
 		</el-row>
 	</div>
 </template>
@@ -56,9 +57,9 @@ export default {
 				// 方案名称
 				schemaName: '',
 				// 模块名称
-				moduleName: '',
+				// moduleName: '',
 				// 模块描述
-				moduleDesc: '',
+				// moduleDesc: '',
 				// 包路径
 				packagePath: '',
 				// 方案类型
@@ -69,9 +70,9 @@ export default {
 				schemaName: [
 					{ required: true, message: '请输入方案名称', trigger: 'blur' }
 				],
-				moduleName: [
-					{ required: true, message: '请输入模块名称', trigger: 'blur' }
-				],
+				// moduleName: [
+				// 	{ required: true, message: '请输入模块名称', trigger: 'blur' }
+				// ],
 				packagePath: [
 					{ required: true, message: '请输入包路径', trigger: 'blur' }
 				],
@@ -81,6 +82,11 @@ export default {
 	created() {
 		this.getSchemaTree();
 	},
+	computed: {
+		schemaId(){
+				return this.$store.state.schema.schemaData.id;
+		}
+},
 	methods: {
 		// 删除节点
     remove(node, data) {
@@ -98,7 +104,8 @@ export default {
 								type: 'success',
 								message: '删除成功！'
 							});   
-							this.getSchemaTree();
+							this.reload();
+							// this.getSchemaTree();
 							// this.resetState();
 						} else {
 							this.$message({
@@ -117,6 +124,31 @@ export default {
 			this.$store.dispatch('saveDatabaseName', '');
 			this.$store.dispatch('saveTableNames', []);
 		},
+		updateForm(formName){
+			this.$refs[formName].validate((valid) => {
+				if (valid) {
+					Object.assign(this.form,{
+							id: schemaId
+					});
+					http.put('agileSchema', this.form).then((ret)=>{
+						if(ret.httpCode === 200){
+							this.$message({
+								type: 'success',
+								message: '保存成功！'
+							});
+							this.$refs[formName].clearValidate();
+							this.$store.dispatch('saveSchema', ret.data);
+							this.$emit('step');
+						} else {
+							this.$message({
+								type: 'error',
+								message: ret.message
+							});   
+						}
+					});
+				} 
+			});
+		},
 		submitForm(formName) {
 			this.$refs[formName].validate((valid) => {
 				if (valid) {
@@ -124,7 +156,7 @@ export default {
 						if(ret.httpCode === 200){
 							this.$message({
 								type: 'success',
-								message: '新增成功！'
+								message: '保存成功！'
 							});
 							this.$refs[formName].clearValidate();
 							this.$store.dispatch('saveSchema', ret.data);
@@ -150,8 +182,8 @@ export default {
 					if (result.httpCode === 200) {
 						this.form = {
 							schemaName: result.data.schemaName,
-							moduleName: result.data.moduleName,
-							moduleDesc: result.data.moduleDesc,
+							// moduleName: result.data.moduleName,
+							// moduleDesc: result.data.moduleDesc,
 							packagePath: result.data.packagePath,
 						}
 						this.$store.dispatch('saveSchema', result.data);

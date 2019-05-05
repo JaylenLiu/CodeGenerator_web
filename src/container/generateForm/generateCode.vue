@@ -1,8 +1,8 @@
 <template>
 	<div class="generate">
 		<el-form ref="generateCodeForm" :model="form" label-width="80px">
-			<el-form-item label="模块名称" prop="moduleName">
-				<el-input v-model="form.moduleName" disabled></el-input>
+			<el-form-item label="方案名称" prop="schemaName">
+				<el-input v-model="form.schemaName" disabled></el-input>
 			</el-form-item>
 			<el-form-item label="包路径" prop="packagePath">
 				<el-input v-model="form.packagePath" disabled></el-input>
@@ -28,23 +28,23 @@ export default {
 	data() {
 		return {
 			form: {
-				moduleName: '',
+				schemaName: '',
 				packagePath: '',
 				generateList: [],
 			},
 		};
 	},
 	computed: {
-		moduleName(){
-			return this.$store.state.schema.schemaData.moduleName;
+		schemaName(){
+			return this.$store.state.schema.schemaData.schemaName;
 		},
 		packagePath(){
 			return this.$store.state.schema.schemaData.packagePath;
 		},
   },
 	watch: {
-		moduleName: function(val){
-			this.form.moduleName = val;
+		schemaName: function(val){
+			this.form.schemaName = val;
 		},
 		packagePath: function(val){
 			this.form.packagePath = val;

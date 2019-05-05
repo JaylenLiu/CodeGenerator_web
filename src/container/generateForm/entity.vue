@@ -34,7 +34,7 @@
 			</el-form-item>
 		</el-form>
 		<el-row type="flex" justify="center">
-			<el-button type="primary"  @click="submitForm('entityForm')">保存</el-button>
+			<el-button v-if="connId == ''" type="primary"  @click="submitForm('entityForm')">保存</el-button>
 		</el-row>
 	</div>
 </template>
@@ -44,8 +44,8 @@ export default {
 	data() {
 		return {
 			form: {
-				connId: this.$store.state.entity.conId,
-				databaseName: this.$store.state.entity.databaseName,
+				connId: '',
+				databaseName: '',
 				tableNames: [],
 			},
 			connOptions:[],
@@ -68,8 +68,8 @@ export default {
 		this.getConnOptions();
 	},
 	computed: {
-        connId(){
-            return this.$store.state.entity.conId;
+    connId(){
+      return this.$store.state.entity.conId;
 		},
 		databaseName(){
 			return this.$store.state.entity.databaseName;
@@ -77,7 +77,7 @@ export default {
 		tableNames(){
 			return this.$store.state.entity.tableNames;
 		}
-    },
+  },
 	watch: {
 		connId: function(val){
 			this.form.connId = val;
