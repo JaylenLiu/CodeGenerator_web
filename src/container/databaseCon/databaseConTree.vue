@@ -48,6 +48,9 @@
                         </el-option>
                     </el-select>    
                 </el-form-item>   
+                <el-form-item  v-if="editData.connType == 3" label="SID(服务名)" prop="sid">
+                    <el-input class="handle-input mr10" v-model="editData.sid"></el-input>
+                </el-form-item>
                 <el-form-item label="ip" prop="connIp">
                     <el-input class="handle-input mr10" v-model="editData.connIp"></el-input>
                 </el-form-item>
@@ -83,6 +86,7 @@
             connTreeData:[], // 组织树数据
             editData:{
                 id:'',
+                sid:'',
                 connName: '',
                 connType: 1,
                 connIp:'',
@@ -106,6 +110,9 @@
                 connPwd: [
                     { required: true, message: '请输入密码', trigger: 'blur' }
                 ],
+                sid:[
+                    { required: true, message: '请输入SID', trigger: 'blur' }
+                ]
             }
         }
     },
@@ -172,7 +179,7 @@
             this.operationType = '新增';
             this.editVisible = true;
             this.editData = {
-                id:'',
+                sid:'',
                 connName: '',
                 connType: 1,
                 connIp:'',
